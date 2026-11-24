@@ -1,0 +1,38 @@
+.toggleContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+
+    .buttonSwitch {
+        position: relative;
+        width: 38px;
+        height: 20px;
+        border-radius: var(--border-radius-pill);
+        border: none;
+
+        .rounded {
+            position: absolute;
+            top: 2px;
+            left: 0px;
+            width: 16px;
+            height: 16px;
+            background-color: var(--white);
+            border-radius: 100%;
+            transition: transform 0.3s;
+        }
+
+
+    }
+      
+      .toggleText {
+        margin-left: 12px;
+        font-size: 16px;
+        font-weight: 400;
+        color: var(--grey-600);
+
+        
+      }
+      
+
+  }

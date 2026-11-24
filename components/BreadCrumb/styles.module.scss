@@ -1,0 +1,45 @@
+/* src/App.css */
+.breadcrumb {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    height: 88px;
+
+    .breadcrumb-item {
+        margin-right: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        &.active {
+            color: var(--grey-600);
+        }
+
+        + .breadcrumb-item {
+            font-size: 16px;
+            font-weight: 400;
+            &::before {
+                content: "";
+                display: block;
+                width: 14px;
+                height: 14px;
+                background-image: url('/arrow-foward.png');
+                margin-right: 8px;
+            }
+        }
+
+        a {
+            text-decoration: none;
+            color: var(--blue-500);
+            transition: filter 0.2s;
+            font-weight: 400px;
+            font-size: 16px;
+
+            &:hover{
+                filter: brightness(0.5);
+            }
+
+        }
+    }
+  }
+  

@@ -1,16 +1,18 @@
 .container {
     display: flex;
+    width: 100%;
     align-items: center;
     justify-content: center;
-    height: 70px;
-    width: 100%;
-    padding: 26px 0px;
+    min-height: 70px;
+    padding: 12px 24px;
     background-color: var(--blue-700);
-    margin-top: 64px;
+    margin-top: auto;
 
     p {
+        margin: 0;
         font-weight: 400;
-        font-size: 12px;
+        font-size: 10px;
         color: var(--white);
+        text-align: center;
     }
 }

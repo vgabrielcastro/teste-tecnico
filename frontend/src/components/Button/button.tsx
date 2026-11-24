@@ -1,19 +1,20 @@
-import React, { ButtonHTMLAttributes } from 'react';
+import type {
+  ButtonHTMLAttributes,
+  FC,
+  ReactNode,
+} from 'react';
 import styles from './styles.module.scss';
 
-type IButtonProps =  'primary' | 'secondary' | 'tertiary' | 'quarternary';
+type IButtonProps = 'primary' | 'secondary' | 'tertiary' | 'quarternary';
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   mode: IButtonProps
   text: string;
-  icon?: JSX.Element; 
-  onClick?: () => void;   
-  style?: React.CSSProperties;
-  type?: 'submit' | 'button'
+  icon?: ReactNode;
 }
 
-const Button: React.FC<ButtonProps> = ({ mode, text, icon, onClick, style, type, disabled, ...rest }) => {
-    
+const Button: FC<ButtonProps> = ({ mode, text, icon, onClick, style, type, disabled, ...rest }) => {
+
   return (
     <button
       {...rest}
@@ -24,7 +25,7 @@ const Button: React.FC<ButtonProps> = ({ mode, text, icon, onClick, style, type,
       onClick={onClick}
     >
       {icon ? icon : ''}
-      <span style={{fontSize: style?.fontSize, fontWeight: style?.fontWeight}} className={styles.text}>{text}</span>
+      <span style={{ fontSize: style?.fontSize, fontWeight: style?.fontWeight }} className={styles.text}>{text}</span>
     </button>
   );
 };

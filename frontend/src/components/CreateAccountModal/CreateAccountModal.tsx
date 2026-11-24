@@ -1,9 +1,11 @@
 import React from "react";
 
 import styles from "./styles.module.scss";
-import { Icons, Button } from "../";
+import { Icons } from "../Icons/Icons";
+import Button from "../Button/button";
 import { useForm } from "react-hook-form";
-import { UseMutationResult } from "@tanstack/react-query";
+import type { UseMutationResult } from "@tanstack/react-query";
+import type { IFormProps } from "../../types";
 
 
 interface IAccountModalProps {

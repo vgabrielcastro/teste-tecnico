@@ -1,6 +1,7 @@
-import { Icons } from '../Icons/Icons'; 
+import { Icons } from '../Icons/Icons';
+// @ts-ignore
 import icCancelFilled from "/ic-cancel-filled.png";
- 
+// @ts-ignore SCSS modules are resolved by the bundler.
 import styles from './styles.module.scss';
 import Button from '../Button/button';
 
@@ -32,15 +33,20 @@ const ModalDelete: React.FC<IModalDeleteProps> = ({
         <div className={styles.header_modal}>
 
           <div className={styles.header_text}>
-              <img src={icCancelFilled} alt="ícone de excluir" />
-              <h4>{headerName ?? 'Excluir item Permanentemente'}</h4>
+            <img src={icCancelFilled} alt="ícone de excluir" />
+            <h4>{headerName ?? 'Excluir item Permanentemente'}</h4>
           </div>
-   
-          <span style={{cursor:"pointer"}} onClick={closeConfirmModal}>{Icons['IcClose']}</span>
+
+          <span style={{ cursor: "pointer" }} onClick={closeConfirmModal}>{Icons['IcClose']}</span>
         </div>
         <div className={styles.text}>
           <p>
-            {question ?? `Tem certeza que deseja excluir ${isTag ? 'a tag' : 'a conta'} "${selectedName}"?`}
+            {question ?? (
+              <>
+                Tem certeza que deseja excluir {isTag ? 'a tag' : 'a conta'} "
+                <strong>{selectedName}</strong>"?
+              </>
+            )}
           </p>
           <p>Essa ação não poderá ser desfeita.</p>
         </div>
@@ -49,13 +55,26 @@ const ModalDelete: React.FC<IModalDeleteProps> = ({
             onClick={closeConfirmModal}
             mode="quarternary"
             text="Voltar"
-            style={{color: "#3255e2",width: "67px",height: "35px",border: "1px solid #3256e2"}}
+            style={{
+              color: "#3255e2",
+              width: "54px",
+              height: "28px",
+              padding: "4px 10px",
+              fontSize: "14px",
+              border: "1px solid #3256e2",
+            }}
           />
           <Button
             onClick={handleDelete}
             mode="primary"
             text="Confirmar"
-            style={{width: "97px",height: "35px",border: "1px solid #3256e2"}}
+            style={{
+              width: "78px",
+              height: "28px",
+              padding: "4px 10px",
+              fontSize: "14px",
+              border: "1px solid #3256e2",
+            }}
           />
         </div>
       </div>

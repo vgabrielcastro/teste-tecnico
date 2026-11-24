@@ -1,21 +1,22 @@
 import React from "react";
 
+// @ts-ignore SCSS modules are resolved by the bundler.
 import styles from "./styles.module.scss";
 import { Icons } from "../Icons/Icons";
 import Button from "../Button/button";
 import { useForm } from "react-hook-form";
-import type { UseMutationResult } from "@tanstack/react-query";
 import type { IFormProps } from "../../types";
 
+type AccountMutation<TVariables> = {
+  mutate: (variables: TVariables) => void;
+};
 
 interface IAccountModalProps {
   closeModal: () => void;
-  createAccount: UseMutationResult<unknown, Error, IFormProps, unknown>;
-  editAccount?: UseMutationResult<unknown, Error, IFormProps, unknown>;
+  createAccount: AccountMutation<IFormProps>;
+  editAccount: AccountMutation<IFormProps & { id: number }>;
   editedAccount?: { id: number; name: string; description: string } | null;
 }
-
-
 
 const AccountModal: React.FC<IAccountModalProps> = ({
   closeModal,
@@ -24,18 +25,18 @@ const AccountModal: React.FC<IAccountModalProps> = ({
   editedAccount
 }) => {
 
-  const  {
-    register, handleSubmit                                                   
-  } = useForm<IFormProps>( {
+  const {
+    register, handleSubmit
+  } = useForm<IFormProps>({
     defaultValues: {
-        name: editedAccount ? editedAccount.name : '',
-        description: editedAccount ? editedAccount.description : ''
+      name: editedAccount ? editedAccount.name : '',
+      description: editedAccount ? editedAccount.description : ''
     }
   })
-  
+
   const onSubmit = (data: IFormProps) => {
-    if (editedAccount) {      
-      editAccount?.mutate({
+    if (editedAccount) {
+      editAccount.mutate({
         name: data.name,
         description: data.description,
         id: editedAccount.id
@@ -70,8 +71,19 @@ const AccountModal: React.FC<IAccountModalProps> = ({
           </div>
         </form>
         <footer className={styles.footerModal}>
-            <Button mode="tertiary" text="Voltar" onClick={closeModal} />
-            <Button mode="primary" text={editedAccount ? "Salvar Alterações" : "Criar Conta"} type="submit" onClick={handleSubmit(onSubmit)} />
+          <Button
+            mode="tertiary"
+            text="Voltar"
+            onClick={closeModal}
+            style={{ height: "28px", padding: "4px 10px", fontSize: "14px" }}
+          />
+          <Button
+            mode="primary"
+            text={editedAccount ? "Salvar alterações" : "Criar conta"}
+            type="submit"
+            onClick={handleSubmit(onSubmit)}
+            style={{ height: "28px", padding: "4px 10px", fontSize: "14px" }}
+          />
 
         </footer>
       </div>

@@ -16,7 +16,10 @@
   --grey-500: #56606b;
   --grey-400: #aeb9c4;
   --grey-300: #cdd6df;
+  --grey-200: #e4e8ed;
+  --grey-700: #202630;
   --white: #ffffff;
+  --border-radius-sm: 4px;
   --border-radius-lg: 10px;
   --border-radius-md: 6px;
 }

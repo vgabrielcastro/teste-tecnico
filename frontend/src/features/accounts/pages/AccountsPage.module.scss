@@ -33,6 +33,21 @@
   background-color: #e4e8ed;
 }
 
+.accountState {
+  display: flex;
+  min-height: 100px;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  color: var(--grey-600);
+  font-size: 14px;
+
+  &[role='alert'] {
+    flex-direction: column;
+    color: #b42318;
+  }
+}
+
 .accountGrid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));

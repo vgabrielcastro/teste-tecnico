@@ -39,6 +39,16 @@
                 margin-left: auto;
             }
 
+            > button {
+                display: flex;
+                margin-left: auto;
+                padding: 0;
+                align-items: center;
+                border: 0;
+                background: transparent;
+                cursor: pointer;
+            }
+
             > svg {
                 width: 20px;
                 height: 20px;
@@ -96,6 +106,13 @@
             justify-content: flex-end;
             gap: 12px;
             padding: 10px 20px;
+        }
+
+        .errorMessage {
+            margin: 0;
+            padding: 0 20px 12px;
+            color: #b42318;
+            font-size: 12px;
         }
 
     }

@@ -1,7 +1,5 @@
 import { Icons } from '../Icons/Icons';
-// @ts-ignore
 import icCancelFilled from "/ic-cancel-filled.png";
-// @ts-ignore SCSS modules are resolved by the bundler.
 import styles from './styles.module.scss';
 import Button from '../Button/button';
 
@@ -12,6 +10,8 @@ interface IModalDeleteProps {
   isTag?: boolean;
   headerName?: string;
   question?: string;
+  isPending?: boolean;
+  errorMessage?: string | null;
 
 }
 
@@ -21,7 +21,9 @@ const ModalDelete: React.FC<IModalDeleteProps> = ({
   selectedName,
   isTag = false,
   headerName,
-  question
+  question,
+  isPending = false,
+  errorMessage,
 }) => {
   return (
     <div className={styles.modal_delete}>
@@ -55,6 +57,7 @@ const ModalDelete: React.FC<IModalDeleteProps> = ({
             onClick={closeConfirmModal}
             mode="quarternary"
             text="Voltar"
+            disabled={isPending}
             style={{
               color: "#3255e2",
               width: "54px",
@@ -67,7 +70,8 @@ const ModalDelete: React.FC<IModalDeleteProps> = ({
           <Button
             onClick={handleDelete}
             mode="primary"
-            text="Confirmar"
+            text={isPending ? "Excluindo..." : "Confirmar"}
+            disabled={isPending}
             style={{
               width: "78px",
               height: "28px",
@@ -77,6 +81,11 @@ const ModalDelete: React.FC<IModalDeleteProps> = ({
             }}
           />
         </div>
+        {errorMessage && (
+          <p className={styles.error_message} role="alert">
+            {errorMessage}
+          </p>
+        )}
       </div>
     </div>
   );

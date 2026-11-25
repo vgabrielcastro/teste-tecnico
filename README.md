@@ -1,6 +1,6 @@
 # Teste técnico — React, SQLite e Google Publisher Tag
 
-Este repositório reúne as entregas do teste técnico. A interface de contas e os fluxos de criar, editar e excluir estão implementados; o backend SQLite já está disponível para a próxima etapa de integração.
+Este repositório reúne as entregas do teste técnico. A interface de contas está integrada à API REST, e as operações de criar, editar e excluir são persistidas no SQLite.
 
 ## Estrutura do projeto
 
@@ -35,15 +35,15 @@ As imagens `imagem1.png` a `imagem5.png` permanecem na raiz como referência par
 
 - **Header:** adicionados os links “Contas” e “Templates”, o estado visual de “Contas” selecionado e a ação visual “Sair”, para aproximar o cabeçalho da referência.
 - **CardAccount:** adicionados os tipos explícitos, substituído o import pelo índice geral por imports diretos e ajustados os estilos do card. Isso evita dependências indiretas e aproxima a listagem do layout esperado.
-- **CreateAccountModal:** importados diretamente o botão e os ícones, usado o tipo `IFormProps` explícito e definido um contrato mínimo para mutations. Isso permite usar callbacks em memória agora e substituir por `useMutation` ao conectar a API. Os estilos, textos e botões foram ajustados à referência, com dimensões ligeiramente ampliadas para melhorar a leitura.
-- **ModalDelete:** ajustados dimensões, espaçamentos e botões conforme a referência e ligeiramente ampliados; o nome da conta fica destacado na confirmação.
+- **CreateAccountModal:** usa mutations do React Query para criar e editar contas; mantém o formulário aberto em caso de erro e sinaliza o estado de envio.
+- **ModalDelete:** ajustados dimensões, espaçamentos e botões conforme a referência; o nome da conta fica destacado na confirmação e falhas na exclusão são exibidas no modal.
 - **Button:** o ícone passou a aceitar `ReactNode`; `onClick`, `style` e `type` são herdados dos atributos nativos do botão, mantendo a tipagem compatível com React e TypeScript atuais.
 
 ## Componentes criados
 
-- **AccountsPage:** criada para exibir as contas e controlar em memória os fluxos de menu, criação, edição e exclusão, mantendo essa funcionalidade específica dentro de `features/accounts`.
+- **AccountsPage:** exibe as contas recebidas da API, gerencia os estados de carregamento/erro/vazio e coordena as mutations de criação, edição e exclusão.
 
-Os fluxos de criar, editar e excluir no frontend ainda usam um array em memória. O backend já tem endpoints REST e persistência SQLite; a integração com o frontend será feita na próxima etapa.
+O serviço `frontend/src/features/accounts/services/accountsApi.ts` centraliza as chamadas HTTP e valida as respostas da API em runtime. O React Query mantém a lista em cache e a atualiza após cada operação.
 
 ## Executar o frontend
 
@@ -68,6 +68,8 @@ npm run dev
 ```
 
 A API fica disponível em `http://127.0.0.1:3001`. Na primeira execução, cria `backend/data/accounts.sqlite` e insere três contas de exemplo. O arquivo do banco é local e ignorado pelo Git.
+
+Durante o desenvolvimento, o Vite encaminha as chamadas de `/api` para o backend em `http://127.0.0.1:3001`. Inicie o backend e o frontend em terminais separados para usar a tela integrada.
 
 ### Rotas da API
 
@@ -123,5 +125,4 @@ Erros de validação retornam `400 Bad Request` com um objeto `error`; um ID vá
 
 ## Próximas etapas
 
-1. Conectar o frontend à API.
-2. Implementar e testar o `banner.js` independente.
+1. Implementar e testar o `banner.js` independente.

@@ -1,54 +1,54 @@
 import React from "react";
 
-// @ts-ignore SCSS modules are resolved by the bundler.
 import styles from "./styles.module.scss";
 import { Icons } from "../Icons/Icons";
 import Button from "../Button/button";
 import { useForm } from "react-hook-form";
-import type { IFormProps } from "../../types";
-
-type AccountMutation<TVariables> = {
-  mutate: (variables: TVariables) => void;
-};
+import type { UseMutationResult } from "@tanstack/react-query";
+import type {
+  IAccount,
+  ICreateAccountInput,
+  IUpdateAccountInput,
+} from "../../types";
 
 interface IAccountModalProps {
   closeModal: () => void;
-  createAccount: AccountMutation<IFormProps>;
-  editAccount: AccountMutation<IFormProps & { id: number }>;
-  editedAccount?: { id: number; name: string; description: string } | null;
+  createAccount: UseMutationResult<IAccount, Error, ICreateAccountInput>;
+  editAccount: UseMutationResult<IAccount, Error, IUpdateAccountInput>;
+  editedAccount?: IAccount | null;
 }
 
 const AccountModal: React.FC<IAccountModalProps> = ({
   closeModal,
   createAccount,
   editAccount,
-  editedAccount
+  editedAccount,
 }) => {
-
   const {
-    register, handleSubmit
-  } = useForm<IFormProps>({
+    register,
+    handleSubmit,
+  } = useForm<ICreateAccountInput>({
     defaultValues: {
-      name: editedAccount ? editedAccount.name : '',
-      description: editedAccount ? editedAccount.description : ''
-    }
-  })
+      name: editedAccount?.name ?? '',
+      description: editedAccount?.description ?? '',
+    },
+  });
 
-  const onSubmit = (data: IFormProps) => {
+  const isPending = editedAccount
+    ? editAccount.isPending
+    : createAccount.isPending;
+  const error = editedAccount ? editAccount.error : createAccount.error;
+
+  const onSubmit = (data: ICreateAccountInput) => {
     if (editedAccount) {
       editAccount.mutate({
-        name: data.name,
-        description: data.description,
-        id: editedAccount.id
+        ...data,
+        id: editedAccount.id,
       });
     } else {
-      createAccount.mutate({
-        name: data.name,
-        description: data.description
-      });
+      createAccount.mutate(data);
     }
-    closeModal();
-  }
+  };
 
   return (
     <div className={styles.addAccountModal}>
@@ -56,17 +56,43 @@ const AccountModal: React.FC<IAccountModalProps> = ({
         <header className={styles.headerModal}>
           {Icons["iconPersonAdd"]}
           <h2>{editedAccount ? "Editar conta" : "Adicionar nova conta"}</h2>
-          <span aria-label="close-button" onClick={closeModal}>{Icons["IcClose"]}</span>
+          <button
+            type="button"
+            aria-label="Fechar modal"
+            onClick={closeModal}
+            disabled={isPending}
+          >
+            {Icons["IcClose"]}
+          </button>
         </header>
-        <form className={styles.bodyModal}>
+        <form
+          id="account-form"
+          className={styles.bodyModal}
+          onSubmit={handleSubmit(onSubmit)}
+        >
           <div className={styles.input_wrapper}>
             <label htmlFor="name">Nome da Conta</label>
-            <input type="text" id="name" {...register("name")} placeholder="Ex: AdOps" />
+            <input
+              type="text"
+              id="name"
+              required
+              {...register("name", { required: true })}
+              placeholder="Ex: AdOps"
+              disabled={isPending}
+            />
             <span>Escolha um nome único, simples e fácil de ser lembrado.</span>
           </div>
           <div className={styles.input_wrapper}>
             <label htmlFor="description">Descrição da conta</label>
-            <input type="text" id="description" {...register("description")} maxLength={40} placeholder="Ex: Conta que gerencia tais repositórios" />
+            <input
+              type="text"
+              id="description"
+              required
+              maxLength={40}
+              {...register("description", { required: true, maxLength: 40 })}
+              placeholder="Ex: Conta que gerencia tais repositórios"
+              disabled={isPending}
+            />
             <span>A descrição deve ser curta. Máximo de 40 caracteres.</span>
           </div>
         </form>
@@ -75,17 +101,29 @@ const AccountModal: React.FC<IAccountModalProps> = ({
             mode="tertiary"
             text="Voltar"
             onClick={closeModal}
+            disabled={isPending}
             style={{ height: "28px", padding: "4px 10px", fontSize: "14px" }}
           />
           <Button
             mode="primary"
-            text={editedAccount ? "Salvar alterações" : "Criar conta"}
+            text={
+              isPending
+                ? "Salvando..."
+                : editedAccount
+                  ? "Salvar alterações"
+                  : "Criar conta"
+            }
             type="submit"
-            onClick={handleSubmit(onSubmit)}
+            form="account-form"
+            disabled={isPending}
             style={{ height: "28px", padding: "4px 10px", fontSize: "14px" }}
           />
-
         </footer>
+        {error && (
+          <p className={styles.errorMessage} role="alert">
+            {error.message}
+          </p>
+        )}
       </div>
     </div>
   );

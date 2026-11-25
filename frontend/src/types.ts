@@ -8,6 +8,12 @@ export interface IAccount extends IFormProps {
   id: number;
 }
 
+export type ICreateAccountInput = Pick<IFormProps, 'name' | 'description'>;
+
+export interface IUpdateAccountInput extends ICreateAccountInput {
+  id: number;
+}
+
 export interface ICardAccountProps {
   id: number;
   name: string;

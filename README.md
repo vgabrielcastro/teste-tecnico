@@ -15,11 +15,14 @@ teste/
 │       ├── App.tsx
 │       └── main.tsx
 ├── backend/                  # API Node/Express + SQLite
+├── banner.js                 # Banner GPT independente do React
+├── banner-demo.html          # Página HTML isolada para testar o banner
+├── test/banner.test.mjs      # Testes do comportamento do banner
 ├── imagem1.png ... imagem5.png # Referências visuais do teste
 └── README.md
 ```
 
-O `banner.js` será adicionado separadamente, pois deve funcionar sem depender da aplicação React.
+O `banner.js` e sua página de demonstração são independentes da aplicação React.
 
 ## Por que separar frontend e backend
 
@@ -123,6 +126,31 @@ Para testar no Postman ou Insomnia, use a Base URL e a rota da tabela. No `POST`
 
 Erros de validação retornam `400 Bad Request` com um objeto `error`; um ID válido que não existe retorna `404 Not Found`. Rode `npm test` dentro de `backend/` para executar os testes da API.
 
-## Próximas etapas
+## Questão 2 — Banner Google Publisher Tag
 
-1. Implementar e testar o `banner.js` independente.
+O banner fica em `banner.js`, sem dependência do React. Em uma página HTML, inclua a tag abaixo antes de `</body>` (com `banner.js` acessível no caminho indicado):
+
+```html
+<script src="./banner.js"></script>
+```
+
+Não é necessário criar a `div` do anúncio nem escrever CSS: o próprio arquivo carrega a biblioteca oficial do GPT de forma assíncrona, cria o contêiner e injeta seus estilos. Ele define o slot `/8804/teste/qa1`; a partir de 768px, usa 728×90 fixo na parte inferior, e abaixo disso usa 300×250 fixo a 20px das bordas direita e inferior. O mesmo slot é atualizado a cada 30 segundos, sem chamar `clear()`, recarregar a página ou recriar o slot.
+
+### Visualizar a demonstração
+
+A demonstração já contém somente a tag que carrega `banner.js`. Para servi-la localmente sem instalar Python, abra um terminal na raiz do repositório e execute:
+
+```powershell
+cd frontend
+npm run dev -- .. --host 127.0.0.1 --port 8000
+```
+
+Acesse `http://localhost:8000/banner-demo.html` e redimensione a janela para conferir o comportamento responsivo. Para parar o servidor, volte ao terminal e pressione `Ctrl+C`. Essa demonstração é independente da aplicação React em `localhost:5173`.
+
+O conteúdo visual do anúncio vem do Google Ad Manager, não do `banner.js`. O ad unit de teste pode mostrar uma peça de demonstração, como a faixa com “728 × 90”. Um anúncio de campanha real só aparece se houver uma campanha elegível configurada para esse ad unit; o código solicita e posiciona o anúncio, mas não controla qual criativo será retornado nem garante preenchimento. É necessária conexão com a internet para carregar a GPT.
+
+Para executar os testes automatizados do banner:
+
+```powershell
+node --test test/banner.test.mjs
+```

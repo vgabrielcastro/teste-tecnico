@@ -5,7 +5,7 @@ import { Icons } from '../../../components/Icons/Icons';
 import AccountModal from '../../../components/CreateAccountModal/CreateAccountModal';
 import ModalDelete from '../../../components/ModalDelete/ModalDelete';
 import type { IAccount, IFormProps } from '../../../types';
-// @ts-ignore CSS module typings are supplied by the bundler.
+// @ts-expect-error CSS module typings are supplied by the bundler.
 import styles from './AccountsPage.module.scss';
 
 const initialAccounts: IAccount[] = [

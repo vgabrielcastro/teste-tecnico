@@ -71,14 +71,55 @@ A API fica disponível em `http://127.0.0.1:3001`. Na primeira execução, cria 
 
 ### Rotas da API
 
-| Método | Rota | Ação |
-|---|---|---|
-| `GET` | `/accounts` | Lista as contas |
-| `POST` | `/accounts` | Cria uma conta |
-| `PUT` | `/accounts/:id` | Atualiza nome e descrição |
-| `DELETE` | `/accounts/:id` | Exclui uma conta |
+Base URL local: `http://127.0.0.1:3001`.
 
-O corpo de criação e atualização é JSON no formato `{"name":"AdOps","description":"Descrição da conta."}`. A descrição aceita no máximo 40 caracteres. Rode `npm test` dentro de `backend/` para executar os testes da API.
+| Método | Rota | Ação | Resposta de sucesso |
+|---|---|---|---|
+| `GET` | `/accounts` | Lista as contas | `200 OK` |
+| `POST` | `/accounts` | Cria uma conta | `201 Created` |
+| `PUT` | `/accounts/:id` | Atualiza nome e descrição | `200 OK` |
+| `DELETE` | `/accounts/:id` | Exclui uma conta | `204 No Content` |
+
+O `POST` e o `PUT` recebem JSON com `name` e `description`. O nome é obrigatório e a descrição aceita no máximo 40 caracteres.
+
+```json
+{
+  "name": "Minha conta",
+  "description": "Descrição da conta."
+}
+```
+
+Exemplo de resposta do `GET /accounts`:
+
+```json
+{
+  "success": true,
+  "data": [
+    {
+      "id": 1,
+      "name": "Time UX",
+      "description": "Descrição da conta."
+    }
+  ]
+}
+```
+
+Exemplo de resposta ao criar uma conta (`POST /accounts`):
+
+```json
+{
+  "success": true,
+  "data": {
+    "id": 4,
+    "name": "Minha conta",
+    "description": "Descrição da conta."
+  }
+}
+```
+
+Para testar no Postman ou Insomnia, use a Base URL e a rota da tabela. No `POST` e no `PUT`, selecione **Body → raw → JSON** e envie o objeto acima. Para editar e excluir, substitua `:id` pelo `id` retornado ao criar a conta. O `DELETE` retorna `204` sem corpo.
+
+Erros de validação retornam `400 Bad Request` com um objeto `error`; um ID válido que não existe retorna `404 Not Found`. Rode `npm test` dentro de `backend/` para executar os testes da API.
 
 ## Próximas etapas
 

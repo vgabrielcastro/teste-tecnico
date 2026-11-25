@@ -54,6 +54,7 @@ export function initializeDatabase(database) {
           { name: 'Time UX', description: 'Descrição da conta.' },
           { name: 'AdOps', description: 'Descrição da conta.' },
           { name: 'TechOps', description: 'Descrição da conta.' },
+          { name: 'Time Dev', description: 'Descrição da conta.' },
         ];
 
         for (const account of accounts) {

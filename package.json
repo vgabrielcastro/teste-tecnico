@@ -1,0 +1,9 @@
+{
+  "name": "teste-tecnico",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "setup": "node scripts/dev.mjs setup",
+    "dev": "node scripts/dev.mjs dev"
+  }
+}

@@ -32,7 +32,13 @@ test('lists seeded accounts and supports create, update and delete', async () =>
   const listResponse = await fetch(`${baseUrl}/accounts`);
   assert.equal(listResponse.status, 200);
   const listBody = await listResponse.json();
-  assert.equal(listBody.data.length, 3);
+  assert.equal(listBody.data.length, 4);
+  assert.deepEqual(listBody.data.map((account) => account.name), [
+    'Time UX',
+    'AdOps',
+    'TechOps',
+    'Time Dev',
+  ]);
 
   const createResponse = await fetch(`${baseUrl}/accounts`, {
     method: 'POST',

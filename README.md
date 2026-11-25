@@ -10,7 +10,9 @@ teste/
 │   ├── public/               # Ícones e arquivos estáticos do front
 │   └── src/
 │       ├── components/       # Componentes fornecidos para a interface
-│       ├── features/accounts/pages/
+│       ├── features/accounts/
+│       │   ├── pages/        # Página e estilos da listagem de contas
+│       │   └── services/     # Comunicação com a API de contas
 │       ├── types.ts
 │       ├── App.tsx
 │       └── main.tsx
@@ -18,15 +20,60 @@ teste/
 ├── banner.js                 # Banner GPT independente do React
 ├── banner-demo.html          # Página HTML isolada para testar o banner
 ├── test/banner.test.mjs      # Testes do comportamento do banner
+├── scripts/dev.mjs           # Instala dependências e inicia os dois serviços
+├── package.json              # Comandos de desenvolvimento da raiz
 ├── imagem1.png ... imagem5.png # Referências visuais do teste
 └── README.md
 ```
 
 O `banner.js` e sua página de demonstração são independentes da aplicação React.
 
+## Clonar e executar localmente
+
+Requisitos: Git, Node.js 20.19+ ou 22.12+ e npm. O banner requer conexão com a internet para carregar a biblioteca GPT.
+
+Clone o repositório:
+
+```powershell
+git clone https://github.com/vgabrielcastro/teste-tecnico.git
+cd teste-tecnico
+```
+
+### Um comando para iniciar tudo
+
+Na raiz do repositório, rode:
+
+```powershell
+npm run dev
+```
+
+O script instala as dependências do frontend e do backend caso ainda não estejam instaladas e inicia os dois processos. A página fica em `http://localhost:5173/`, e a API em `http://127.0.0.1:3001`. Pressione `Ctrl+C` para encerrar ambos. Esse comando requer Node.js e npm previamente instalados; ele instala os pacotes do projeto, não o próprio Node.js/npm.
+
+Se preferir instalar as dependências antes de iniciar os servidores, rode `npm run setup` na raiz. Depois use `npm run dev` para iniciar o projeto.
+
+### Inicialização manual
+
+Também é possível iniciar os serviços sem o script. Em um terminal aberto na raiz, instale e rode o backend:
+
+```powershell
+cd backend
+npm install
+npm run dev
+```
+
+Em outro terminal aberto na raiz, instale e rode o frontend:
+
+```powershell
+cd frontend
+npm install
+npm run dev
+```
+
+Mantenha os dois processos ativos para usar a página integrada à API. O Vite encaminha `/api` ao backend em `http://127.0.0.1:3001`.
+
 ## Por que separar frontend e backend
 
-O projeto será dividido em `frontend/` e `backend/` para manter a interface e a API organizadas em seus próprios diretórios. Essa separação facilita encontrar e manter o código, além de permitir instalar dependências e executar cada parte de forma independente.
+O projeto é dividido em `frontend/` e `backend/` para manter a interface e a API organizadas em seus próprios diretórios. Essa separação facilita encontrar e manter o código, além de permitir instalar dependências e executar cada parte de forma independente.
 
 ## Componentes e assets existentes
 
@@ -37,42 +84,20 @@ As imagens `imagem1.png` a `imagem5.png` permanecem na raiz como referência par
 ## Alterações nos componentes existentes
 
 - **Header:** adicionados os links “Contas” e “Templates”, o estado visual de “Contas” selecionado e a ação visual “Sair”, para aproximar o cabeçalho da referência.
-- **CardAccount:** adicionados os tipos explícitos, substituído o import pelo índice geral por imports diretos e ajustados os estilos do card. Isso evita dependências indiretas e aproxima a listagem do layout esperado.
-- **CreateAccountModal:** usa mutations do React Query para criar e editar contas; mantém o formulário aberto em caso de erro e sinaliza o estado de envio.
-- **ModalDelete:** ajustados dimensões, espaçamentos e botões conforme a referência; o nome da conta fica destacado na confirmação e falhas na exclusão são exibidas no modal.
+- **CardAccount:** adicionados tipos explícitos, imports diretos e estilos ajustados. O menu do card aciona as ações de editar e excluir da página.
+- **CreateAccountModal:** conectado às mutations React Query para criar e editar; mantém o formulário aberto e mostra o erro se a API falhar, além de indicar o estado de envio. O layout e os estilos foram aproximados das referências.
+- **ModalDelete:** ajustados dimensões, espaçamentos e botões conforme a referência; o nome da conta fica destacado, e falhas na exclusão são exibidas no modal.
 - **Button:** o ícone passou a aceitar `ReactNode`; `onClick`, `style` e `type` são herdados dos atributos nativos do botão, mantendo a tipagem compatível com React e TypeScript atuais.
 
 ## Componentes criados
 
-- **AccountsPage:** exibe as contas recebidas da API, gerencia os estados de carregamento/erro/vazio e coordena as mutations de criação, edição e exclusão.
+- **AccountsPage:** criada em `features/accounts/pages/` para manter a funcionalidade de contas organizada por feature. Exibe dados da API, trata carregamento/erro/lista vazia e coordena as mutations de criar, editar e excluir.
 
 O serviço `frontend/src/features/accounts/services/accountsApi.ts` centraliza as chamadas HTTP e valida as respostas da API em runtime. O React Query mantém a lista em cache e a atualiza após cada operação.
 
-## Executar o frontend
+## Endereços locais e API
 
-Requer Node.js e npm instalados.
-
-```powershell
-cd frontend
-npm install
-npm run dev
-```
-
-O Vite informa no terminal o endereço local da aplicação, normalmente `http://localhost:5173`.
-
-## Executar o backend
-
-Em outro terminal:
-
-```powershell
-cd backend
-npm install
-npm run dev
-```
-
-A API fica disponível em `http://127.0.0.1:3001`. Na primeira execução, cria `backend/data/accounts.sqlite` e insere três contas de exemplo. O arquivo do banco é local e ignorado pelo Git.
-
-Durante o desenvolvimento, o Vite encaminha as chamadas de `/api` para o backend em `http://127.0.0.1:3001`. Inicie o backend e o frontend em terminais separados para usar a tela integrada.
+O frontend abre em `http://localhost:5173/` e a API em `http://127.0.0.1:3001`. Na primeira execução, o backend cria `backend/data/accounts.sqlite` e insere quatro contas de exemplo: Time UX, AdOps, TechOps e Time Dev. Uma lista esvaziada não é repovoada em reinicializações posteriores. O arquivo do banco é local e ignorado pelo Git. Durante o desenvolvimento, o Vite encaminha as chamadas de `/api` para o backend; mantenha ambos os processos ativos para usar a tela integrada.
 
 ### Rotas da API
 
